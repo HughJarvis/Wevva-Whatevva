@@ -15,6 +15,8 @@ class ViewController: UIViewController {
     
     let weatherService = WeatherService()
     let weatherChecker = WeatherChecker()
+    let locationController = LocationController()
+    
     let coord = Coord(latitude: 40.42, longitude: -3.69)
     
     struct TempRange {
@@ -92,7 +94,8 @@ class ViewController: UIViewController {
     
     @IBAction func whereToGoTapped(_ sender: Any) {
         print("tell me where to go button clicked")
-        self.weatherService.getLocations(coord: self.coord, locationsCompletionHandler: { locations in
+        self.locationController.getLocation()
+        self.weatherService.getLocations(location: self.locationController.userLocation, locationsCompletionHandler: { locations in
             if let locations = locations {
                 DispatchQueue.main.async {
                     self.fetchedLocations = locations

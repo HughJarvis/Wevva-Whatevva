@@ -7,14 +7,15 @@
 //
 
 import Foundation
+import CoreLocation
 
 class WeatherService {
     
     
-    func getLocations(coord: Coord, locationsCompletionHandler: @escaping ([Location]?) -> Void) -> Void {
+    func getLocations(location: CLLocation, locationsCompletionHandler: @escaping ([Location]?) -> Void) -> Void {
         
         
-        let url = URL(string: "https://api.openweathermap.org/data/2.5/find?lat=\(coord.latitude)&lon=\(coord.longitude)&cnt=20&APPID=eb85809fe35a919d1b811ce9c19bc453")!
+        let url = URL(string: "https://api.openweathermap.org/data/2.5/find?lat=\(location.coordinate.latitude)&lon=\(location.coordinate.longitude)&cnt=20&APPID=eb85809fe35a919d1b811ce9c19bc453")!
         
         
         
