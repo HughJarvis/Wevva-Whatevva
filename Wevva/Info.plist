@@ -46,6 +46,7 @@
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
+		<string>location services</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
@@ -53,6 +54,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We want to tell you how close you are to your desired weather</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We want to tell you how close you are to your desired weather</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
