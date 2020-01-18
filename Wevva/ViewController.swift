@@ -7,17 +7,24 @@
 //
 
 import UIKit
+import CoreLocation
 
 class ViewController: UIViewController {
     
-    @IBOutlet weak var weatherView: UITableView!
+    @IBOutlet weak var locationWeatherTextField: UITextField!
+    @IBOutlet weak var locationTempTextField: UITextField!
+    @IBOutlet weak var locationIcon: UIImageView!
+    @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var weatherPicker: UIPickerView!
+    @IBOutlet weak var TellMeWhereToGo: UIButton!
     
     let weatherService = WeatherService()
     let weatherChecker = WeatherChecker()
-    let locationController = LocationController()
+    var locationController = LocationController()
     
-    let coord = Coord(latitude: 40.42, longitude: -3.69)
+    var userLocation: CLLocation?
+    
+    var weatherMatchLocations: [Location] = []
     
     struct TempRange {
            let upper: Float
@@ -39,7 +46,7 @@ class ViewController: UIViewController {
          
     var temperatureRanges: [TempRange] = []
     
-    
+
     let clearSky = Weather(description: "clear sky", icon: "01d")
     let lightCloud = Weather(description: "light cloud", icon: "02d")
     let scatteredCloud = Weather(description: "scattered cloud", icon: "03d")
@@ -55,32 +62,28 @@ class ViewController: UIViewController {
     var requestedWeather: Weather = Weather(description: "clear sky", icon: "01d")
     var requestedTemperatureRange: TempRange = TempRange(upper: 293, lower: 303, description: "20C to 30C")
     
-        var fetchedLocations: [Location] = []{
-                didSet {
-                    DispatchQueue.main.async {
-                        self.weatherView.reloadData()
-                    }
-                }
-            }
+       
+     var fetchedLocations: [Location] = []
     
-    
-    
-        var weatherMatchLocations: [Location] = []
-    
-    
-    
-      //  var latitude: Double = 0
-      //  var longitude: Double = 0
+//    var fetchedLocations: [Location] = []{
+//        didSet {
+//            DispatchQueue.main.async {
+//                self.weatherView.reloadData()
+//            }
+//        }
+//    }
        
     
+    
+        
+        
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+      //  TellMeWhereToGo.isEnabled = false
         weatherPicker.dataSource = self
         weatherPicker.delegate = self
-        weatherView.dataSource = self
-        weatherView.delegate = self
+        
         
         temperatureRanges = [minusTenOrColder, minusNineToMinusFive, minusFourToZero, oneToFive, sixToTen, elevenToFifteen, sixteenToTwenty, twentyOneToTwentyFive, twentySixToThirty, thirtyOneToThirtyFive, thirtySixOrHotter]
         
@@ -88,19 +91,26 @@ class ViewController: UIViewController {
         
         requestedWeather = clearSky
         requestedTemperatureRange = twentySixToThirty
+        
+        locationController.getUserLocation()
+        
+//        if let userLocation = userLocation {
+//            self.userLocation = userLocation
+//            print("and this knows location is\(self.userLocation)")
+//            TellMeWhereToGo.isEnabled = true
+//        }
     }
 
     
     
     @IBAction func whereToGoTapped(_ sender: Any) {
         print("tell me where to go button clicked")
-        self.locationController.getLocation()
         self.weatherService.getLocations(location: self.locationController.userLocation, locationsCompletionHandler: { locations in
             if let locations = locations {
                 DispatchQueue.main.async {
                     self.fetchedLocations = locations
                     print(self.fetchedLocations)
-                   
+                
                     
 //                    self.weatherMatchLocations = self.weatherChecker.getLocationsWithRequestedWeather(locations: self.fetchedLocations, requestedHighTemperature: self.requestedTemperatureRange.upper, requestedLowTemperature: self.requestedTemperatureRange.lower, requestedIcon: self.requestedWeather.icon)
 //
@@ -114,23 +124,10 @@ class ViewController: UIViewController {
             }
         })
     }
-    
 }
 
-extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource, UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        self.fetchedLocations.count
-    }
+extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let location = self.fetchedLocations[indexPath.row]
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherLocationCell") as! WeatherLocationCell
-        
-        cell.setLocation(location: location)
-        
-        return cell
-    }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
        return 2

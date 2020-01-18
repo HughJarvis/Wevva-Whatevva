@@ -39,7 +39,7 @@ class WeatherService {
             
             do {
                 let weatherInfo = try! decoder.decode(WeatherInfo.self, from: data!)
-                locationsCompletionHandler(weatherInfo.list)
+                locationsCompletionHandler(weatherInfo.list) 
                 
                 
             } catch {
