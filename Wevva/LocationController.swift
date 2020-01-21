@@ -18,6 +18,8 @@ class LocationController:  NSObject {
         if CLLocationManager.locationServicesEnabled() {
             locationManager.requestLocation()
             }
+        
+        
         }
     
     }
@@ -31,7 +33,7 @@ extension LocationController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         userLocation = locations[0]
         
-        print("user location is \(userLocation)")
+        print("user location is \(String(describing: userLocation))")
     }
     
     

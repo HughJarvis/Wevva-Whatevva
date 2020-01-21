@@ -12,10 +12,10 @@ import CoreLocation
 class WeatherService {
     
     
-    func getLocations(location: CLLocation, locationsCompletionHandler: @escaping ([Location]?) -> Void) -> Void {
+    func getLocations(locationsCompletionHandler: @escaping ([Location]?) -> Void) -> Void {
         
         
-        let url = URL(string: "https://api.openweathermap.org/data/2.5/find?lat=\(location.coordinate.latitude)&lon=\(location.coordinate.longitude)&cnt=20&APPID=eb85809fe35a919d1b811ce9c19bc453")!
+        let url = URL(string: "https://api.openweathermap.org/data/2.5/find?lat=56.29&lon=-2.97&cnt=20&APPID=eb85809fe35a919d1b811ce9c19bc453")!
         
         
         
@@ -39,11 +39,7 @@ class WeatherService {
             
             do {
                 let weatherInfo = try! decoder.decode(WeatherInfo.self, from: data!)
-                locationsCompletionHandler(weatherInfo.list) 
-                
-                
-            } catch {
-                print("JSON error: \(error.localizedDescription)")
+                locationsCompletionHandler(weatherInfo.list)
             }
             
         })
