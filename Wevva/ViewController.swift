@@ -36,7 +36,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-      //  TellMeWhereToGo.isEnabled = false
+        TellMeWhereToGo.isEnabled = false
         weatherPicker.dataSource = weatherPickerDataSource
         weatherPicker.delegate = weatherPickerDataSource
         
@@ -46,25 +46,18 @@ class ViewController: UIViewController {
         weatherPickerDataSource.createTemperatureRanges()
         weatherPickerDataSource.createWeatherValues()
         
+        locationController.locationManager.delegate = self
+        locationController.getUserLocation()
+    
         
-//        locationController.getUserLocation()
-//        print(locationController.userLocation)
-        
-        
-         DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
-            self.userLocation = self.locationController.locationManager.location
         }
        
         
         
         
         
-//        if let userLocation = userLocation {
-//            self.userLocation = userLocation
-//            print("and this knows location is\(self.userLocation)")
-//            TellMeWhereToGo.isEnabled = true
-//        }
-    }
+
+    
 
 //    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 //        let matchedWeatherViewcontroller = segue.destination as! MatchedWeatherViewController
@@ -87,7 +80,7 @@ class ViewController: UIViewController {
     
     @IBAction func whereToGoWasTapped(_ sender: Any) {
         print("Tell me where to go button tapped")
-        weatherService.getLocations(locationsCompletionHandler: {locations in
+        self.weatherService.getLocations(userLocation: self.userLocation, locationsCompletionHandler: { locations in
             if let locations = locations {
                 DispatchQueue.main.async {
                     self.fetchedLocations = locations
@@ -123,7 +116,7 @@ class ViewController: UIViewController {
 //}
 }
 
-extension ViewController: UITableViewDelegate, UITableViewDataSource {
+extension ViewController: UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return fetchedLocations.count
@@ -135,5 +128,16 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         cell.setLocation(location: location)
         return cell
     }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("ERROR!! locationManager didFailWithError: \(error)")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        userLocation = locations[0]
+        self.TellMeWhereToGo.isEnabled = true
+        print("user location is \(String(describing: userLocation))")
+    }
+    
   
 }

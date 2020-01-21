@@ -40,9 +40,8 @@ class WeatherPickerDataSource: NSObject, UIPickerViewDataSource, UIPickerViewDel
        let snow = Weather(description: "snow", icon: "13d")
        let fog = Weather(description: "fog", icon: "50d")
     
-        var requestedWeather = Weather(description: "clear sky", icon: "01d")
-        var requestedTemperatureRange = TempRange(upper: 293, lower: 303, description: "20C to 30C")
-    
+    var requestedWeather: Weather?
+    var requestedTemperatureRange: TempRange?
     
     func createWeatherValues(){
         weatherValues = [clearSky, lightCloud, scatteredCloud, heavyCloud, showers, rain, thunder, snow, fog]
@@ -101,15 +100,17 @@ class WeatherPickerDataSource: NSObject, UIPickerViewDataSource, UIPickerViewDel
                 return weatherPickerView
         }
         
-        func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-            if component == 0 {
-                requestedWeather = weatherValues[row]
-            } else {
-                requestedTemperatureRange = temperatureRanges[row]
-            }
-        }
+       
         
     }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+               if component == 0 {
+                   requestedWeather = weatherValues[row]
+               } else {
+                   requestedTemperatureRange = temperatureRanges[row]
+               }
+           }
     
     
 }

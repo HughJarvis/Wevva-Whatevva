@@ -12,12 +12,31 @@ import CoreLocation
 class WeatherService {
     
     
-    func getLocations(locationsCompletionHandler: @escaping ([Location]?) -> Void) -> Void {
+    func getLocations(userLocation: CLLocation?, locationsCompletionHandler: @escaping ([Location]?) -> Void) -> Void {
         
+//        var left = 0.0
+//        var bottom = 0.0
+//        var right = 0.0
+//        var top = 0.0
+        var latitude = 0.0
+        var longitude = 0.0
         
-        let url = URL(string: "https://api.openweathermap.org/data/2.5/find?lat=56.29&lon=-2.97&cnt=20&APPID=eb85809fe35a919d1b811ce9c19bc453")!
+        if let userLocation = userLocation {
+            latitude = Darwin.round(userLocation.coordinate.latitude)
+            print(latitude)
+            longitude = Darwin.round(userLocation.coordinate.longitude)
+            print(longitude)
+//            left = longitude - 2.50
+//            bottom = latitude - 2.50
+//            right = longitude + 2.50
+//            top = latitude + 2.50
+        }
         
-        
+// for alternative API call that defines area to search in
+//        let url = URL(string: "https://api.openweathermap.org/data/2.5/box/city?bbox=\(left),\(bottom),\(right),\(top),10&APPID=eb85809fe35a919d1b811ce9c19bc453")!
+//
+
+        let url = URL(string: "https://api.openweathermap.org/data/2.5/find?lat=\(latitude)&lon=\(longitude)&cnt=10&APPID=eb85809fe35a919d1b811ce9c19bc453")!
         
         let dataTask = URLSession.shared.dataTask(with: url, completionHandler: { data, response, error in
             
@@ -46,3 +65,6 @@ class WeatherService {
         dataTask.resume()
     }
 }
+
+
+
